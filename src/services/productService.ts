@@ -1,7 +1,7 @@
-import { prodictModel } from "../models/productModel";
+import { productModel } from "../models/productModel";
 
 export const getAllProducts = async () => {
-    return await prodictModel.find();
+    return await productModel.find();
 }
 
 export const seedInitialProducts = async () => {
@@ -13,7 +13,7 @@ export const seedInitialProducts = async () => {
     const existingProducts = await getAllProducts();
 
     if(existingProducts.length === 0){
-        await prodictModel.insertMany(products);
+        await productModel.insertMany(products);
     }
 
 }

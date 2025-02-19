@@ -12,7 +12,7 @@ router.post("/register", async (request, resopnse) => {
       email,
       password,
     });
-    resopnse.status(statusCode).send(data);
+    resopnse.status(statusCode).json(data);
   } catch (err) {
     resopnse.status(500).send("Something went wrong: " + err);
   }
@@ -22,7 +22,7 @@ router.post("/login", async (request, resopnse) => {
   try {
     const { email, password } = request.body;
     const { data, statusCode } = await login({ email, password });
-    resopnse.status(statusCode).send(data);
+    resopnse.status(statusCode).json(data);
   } catch (err) {
     resopnse.status(500).send("Something went wrong: " + err);
   }

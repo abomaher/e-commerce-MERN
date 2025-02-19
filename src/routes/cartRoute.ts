@@ -1,5 +1,5 @@
 import expess from "express";
-import { addItemToCart, getActiveCartForUser, updateItemToCart } from "../services/cartService";
+import { addItemToCart, clearCart, deleteItemToCart, getActiveCartForUser, updateItemToCart } from "../services/cartService";
 import validateJWT from "../middlewares/validateJWT";
 import { ExtendRequest } from "../types/extendedRequest";
 
@@ -10,6 +10,16 @@ router.get("/", validateJWT, async (req: ExtendRequest, res) => {
     const userId = req?.user?._id;
     const cart = await getActiveCartForUser({ userId });
     res.status(200).send(cart);
+  } catch (err) {
+    res.status(500).send("Something went wrong: " + err);
+  }
+});
+
+router.delete("/", validateJWT, async (req: ExtendRequest, res) => {
+  try {
+    const userId = req?.user?._id;
+    const response = await clearCart({ userId });
+    res.status(response.statusCode).send(response.data);
   } catch (err) {
     res.status(500).send("Something went wrong: " + err);
   }
@@ -36,5 +46,18 @@ router.put("/items", validateJWT, async (req: ExtendRequest, res) => {
     res.status(500).send("Something went wrong: " + err);
   }
 });
+
+router.delete("/items/:productId", validateJWT, async (req: ExtendRequest, res) => {
+  try {
+    const userId = req?.user?._id;
+    const { productId } = req.params;
+    const response = await deleteItemToCart({ userId, productId });
+    res.status(response.statusCode).send(response.data);
+  } catch (err) {
+    res.status(500).send("Something went wrong: " + err);
+  }
+});
+
+
 
 export default router;

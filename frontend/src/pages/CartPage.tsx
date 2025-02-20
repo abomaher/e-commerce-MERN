@@ -4,11 +4,17 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 
 const CartPage = () => {
-  const { cartItems, totalAmount, updateItemInCart, removeItemInCart } = useCart();
+  const {
+    cartItems,
+    totalAmount,
+    updateItemInCart,
+    removeItemInCart,
+    clearCart,
+  } = useCart();
 
   const handleQuantity = (productId: string, quantity: number) => {
-    if(quantity <= 0){
-        return;
+    if (quantity <= 0) {
+      return;
     }
 
     updateItemInCart(productId, quantity);
@@ -16,11 +22,10 @@ const CartPage = () => {
 
   const handleRemoveItem = (productId: string) => {
     removeItemInCart(productId);
-  }
+  };
 
-  return (
-    <Container fixed sx={{ mt: 4 }}>
-      <Typography variant="h4" marginBottom={5}>My Cart</Typography>
+  const readerItemsInCart = () => {
+    return (
       <Box display="flex" flexDirection="column" gap={4}>
         {cartItems.map((item) => (
           <Box
@@ -32,7 +37,7 @@ const CartPage = () => {
               border: 1,
               borderColor: "#cccccc",
               borderRadius: 3,
-              padding: 2
+              padding: 2,
             }}
           >
             <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
@@ -42,20 +47,60 @@ const CartPage = () => {
                 <Typography>
                   {item.quantity} x {item.unitPrice} SAR
                 </Typography>
-                <Button onClick={() => handleRemoveItem(item.productId)}>Remove Item</Button>
+                <Button onClick={() => handleRemoveItem(item.productId)}>
+                  Remove Item
+                </Button>
               </Box>
             </Box>
 
             <ButtonGroup variant="contained" aria-label="Basic button group">
-              <Button onClick={() => handleQuantity(item.productId, item.quantity - 1)}>-</Button>
-              <Button onClick={() => handleQuantity(item.productId, item.quantity + 1)}>+</Button>
+              <Button
+                onClick={() =>
+                  handleQuantity(item.productId, item.quantity - 1)
+                }
+              >
+                -
+              </Button>
+              <Button
+                onClick={() =>
+                  handleQuantity(item.productId, item.quantity + 1)
+                }
+              >
+                +
+              </Button>
             </ButtonGroup>
           </Box>
         ))}
         <Box>
-          <Typography variant="h5">Total Amount: {totalAmount.toFixed(2)} SAR</Typography>
+          <Typography variant="h5">
+            Total Amount: {totalAmount.toFixed(2)} SAR
+          </Typography>
         </Box>
       </Box>
+    );
+  };
+
+  return (
+    <Container fixed sx={{ mt: 4 }}>
+      <Box
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h4" marginBottom={5}>
+          My Cart
+        </Typography>
+        <Button onClick={() => clearCart()}>Clear Cart</Button>
+      </Box>
+
+      {cartItems.length ? (
+        readerItemsInCart()
+      ) : (
+        <Typography>
+          Cart is empty. Please start shopping and add items first.
+        </Typography>
+      )}
     </Container>
   );
 };

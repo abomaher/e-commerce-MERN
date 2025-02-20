@@ -1,11 +1,39 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useCart } from "../context/Cart/CartContext";
 import { useRef } from "react";
+import { BASE_URL } from "../constants/BaseUrl";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/Auth/AuthContext";
 
 const CheckoutPage = () => {
+  const { token } = useAuth();
+
   const { cartItems, totalAmount } = useCart();
 
-    const addressRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+
+  const navigate = useNavigate();
+
+  const handleConfirmOrder = async () => {
+    const address = addressRef.current?.value;
+
+    if (!address) return;
+
+    const response = await fetch(`${BASE_URL}/cart/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        address,
+      }),
+    });
+
+    if (!response.ok) return;
+
+    navigate("/OrderSuccess");
+  };
 
   const readerItemsInCart = () => {
     return (
@@ -52,7 +80,7 @@ const CheckoutPage = () => {
           </Box>
         ))}
         <Box>
-          <Typography variant="body2" sx={{textAlign:"right"}}>
+          <Typography variant="body2" sx={{ textAlign: "right" }}>
             Total Amount: {totalAmount.toFixed(2)} EGP
           </Typography>
         </Box>
@@ -61,7 +89,10 @@ const CheckoutPage = () => {
   };
 
   return (
-    <Container fixed sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+    <Container
+      fixed
+      sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}
+    >
       <Box
         display="flex"
         flexDirection="row"
@@ -72,10 +103,16 @@ const CheckoutPage = () => {
           Checkout
         </Typography>
       </Box>
-        <TextField inputRef={addressRef} fullWidth label="Delivery Address" name="address" />
+      <TextField
+        inputRef={addressRef}
+        fullWidth
+        label="Delivery Address"
+        name="address"
+      />
       {readerItemsInCart()}
-      <Button variant="contained" fullWidth>Pay Now</Button>
-
+      <Button variant="contained" fullWidth onClick={handleConfirmOrder}>
+        Pay Now
+      </Button>
     </Container>
   );
 };

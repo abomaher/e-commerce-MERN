@@ -14,12 +14,22 @@ const createCartForUser = async ({ userId }: CreateCartForUser) => {
 
 interface GetActiveCartForUser {
   userId: string;
+  populateProduct?: boolean;
 }
 
 export const getActiveCartForUser = async ({
   userId,
+  populateProduct,
 }: GetActiveCartForUser) => {
-  let cart = await cartModel.findOne({ userId, status: "active" });
+  let cart;
+
+  if (populateProduct) {
+    cart = await cartModel
+      .findOne({ userId, status: "active" })
+      .populate("items.product");
+  } else {
+    cart = await cartModel.findOne({ userId, status: "active" });
+  }
 
   if (!cart) {
     cart = await createCartForUser({ userId });
@@ -32,17 +42,15 @@ interface clearCart {
   userId: string;
 }
 
-export const clearCart = async ({
-  userId,
-}: clearCart) => {
+export const clearCart = async ({ userId }: clearCart) => {
   const cart = await getActiveCartForUser({ userId });
 
   cart.items = [];
   cart.totalAmount = 0;
 
-  const updatedCart = await cart.save();
+  await cart.save();
 
-  return { data: updatedCart, statusCode: 200 };
+  return { data: await getActiveCartForUser({userId, populateProduct: true}), statusCode: 200 };
 };
 
 interface addItemToCart {
@@ -87,9 +95,9 @@ export const addItemToCart = async ({
   // Update the totalAmount for the cart
   cart.totalAmount += product.price * quantity;
 
-  const updatedCart = await cart.save();
+  await cart.save();
 
-  return { data: updatedCart, statusCode: 200 };
+  return { data: await getActiveCartForUser({userId, populateProduct: true}), statusCode: 200 };
 };
 
 interface updateItemToCart {
@@ -130,16 +138,16 @@ export const updateItemToCart = async ({
     (p) => p.product.toString() !== productId
   );
 
-  let total = calculateCartTotalItems({cartItems: otherCartItems});
+  let total = calculateCartTotalItems({ cartItems: otherCartItems });
 
   existsInCart.quantity = quantity;
   total += existsInCart.quantity * existsInCart.unitPrice;
 
   cart.totalAmount = total;
 
-  const updatedCart = await cart.save();
+  await cart.save();
 
-  return { data: updatedCart, statusCode: 200 };
+  return { data: await getActiveCartForUser({userId, populateProduct: true}), statusCode: 200 };
 };
 
 interface deleteItemToCart {
@@ -167,14 +175,14 @@ export const deleteItemToCart = async ({
     (p) => p.product.toString() !== productId
   );
 
-  const total = calculateCartTotalItems({cartItems: otherCartItems});
+  const total = calculateCartTotalItems({ cartItems: otherCartItems });
 
   cart.items = otherCartItems;
   cart.totalAmount = total;
 
-  const updatedCart = await cart.save();
+  await cart.save();
 
-  return { data: updatedCart, statusCode: 200 };
+  return { data: await getActiveCartForUser({userId, populateProduct: true}), statusCode: 200 };
 };
 
 const calculateCartTotalItems = ({ cartItems }: { cartItems: ICartItem[] }) => {
@@ -186,14 +194,13 @@ const calculateCartTotalItems = ({ cartItems }: { cartItems: ICartItem[] }) => {
   return total;
 };
 
-interface checkout{
+interface checkout {
   userId: string;
   address: string;
 }
 
 export const checkout = async ({ userId, address }: checkout) => {
-
-  if(!address){
+  if (!address) {
     return { data: "Please add the address", statusCode: 400 };
   }
 
@@ -202,10 +209,10 @@ export const checkout = async ({ userId, address }: checkout) => {
   const orderItems: IOrderItem[] = [];
 
   // Loop cartItems and create orderIthems
-  for(const item of cart.items){
+  for (const item of cart.items) {
     const product = await productModel.findById(item.product);
 
-    if(!product){
+    if (!product) {
       return { data: "Product not found", statusCode: 400 };
     }
 
@@ -213,7 +220,7 @@ export const checkout = async ({ userId, address }: checkout) => {
       productTitle: product.title,
       productImage: product.image,
       quantity: item.quantity,
-      unitPrice: item.unitPrice
+      unitPrice: item.unitPrice,
     };
 
     orderItems.push(orderItem);
@@ -233,5 +240,4 @@ export const checkout = async ({ userId, address }: checkout) => {
   await cart.save();
 
   return { data: order, statusCode: 200 };
-
-}
+};

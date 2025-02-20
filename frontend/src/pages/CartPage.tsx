@@ -1,41 +1,44 @@
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/Auth/AuthContext";
 import { BASE_URL } from "../constants/BaseUrl";
+import { useCart } from "../context/Cart/CartContext";
 
 const CartPage = () => {
     const { token } = useAuth();
-    const [cart, setCart] = useState();
     const [error, setError] = useState('');
+    const { cartItems, totalAmount } = useCart();
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if(!token){
-            return;
-        }
+    //     if(!token){
+    //         return;
+    //     }
 
-        const fetchCart = async () => {
-            const response = await fetch(`${BASE_URL}/cart`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+    //     const fetchCart = async () => {
+    //         const response = await fetch(`${BASE_URL}/cart`, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`
+    //             }
+    //         });
 
-            if(!response.ok){
-                setError('Fsiled to fetch user cart. Please try again.');
-            }
+    //         if(!response.ok){
+    //             setError('Fsiled to fetch user cart. Please try again.');
+    //         }
 
-            const data = await response.json();
-            setCart(data);
-        };
+    //         const data = await response.json();
+    //         setCart(data);
+    //     };
     
-        fetchCart();
-      }, [token]);
+    //     fetchCart();
+    //   }, [token]);
 
-console.log({cart});
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h6">My Cart</Typography>
+      {cartItems.map((item) => (
+        <Box>{item.title}</Box>
+      ))}
       {error && <Typography sx={{color: "red"}}>{error}</Typography>}
     </Container>
   );

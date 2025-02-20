@@ -32,7 +32,7 @@ const CheckoutPage = () => {
 
     if (!response.ok) return;
 
-    navigate("/OrderSuccess");
+    navigate("/orderSuccess");
   };
 
   const readerItemsInCart = () => {

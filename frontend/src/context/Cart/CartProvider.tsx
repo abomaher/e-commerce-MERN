@@ -1,14 +1,50 @@
-import { FC, PropsWithChildren, useState } from "react";
+import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import { BASE_URL } from "../../constants/BaseUrl";
 import { CartItem } from "../../types/CartItems";
 import { useAuth } from "../Auth/AuthContext";
 
 const CartProvider: FC<PropsWithChildren> = ({ children }) => {
-    const { token } = useAuth();
+  const { token } = useAuth();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+
+    if(!token){
+        return;
+    }
+
+    const fetchCart = async () => {
+        const response = await fetch(`${BASE_URL}/cart`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if(!response.ok){
+            setError('Fsiled to fetch user cart. Please try again.');
+        }
+
+        const cart = await response.json();
+
+        const cartItemsMapped = cart.items.map(
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+            ({ product, quantity }: { product: any; quantity: number }) => ({
+              productId: product._id,
+              title: product.title,
+              image: product.image,
+              quantity,
+              unitPrice: product.unitPrice,
+            })
+          );
+
+        setCartItems(cartItemsMapped);
+    };
+
+    fetchCart();
+  }, [token]);
 
   const addItemToCart = async (productId: string) => {
     try {
@@ -16,7 +52,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           productId,

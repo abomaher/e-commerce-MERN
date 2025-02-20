@@ -1,24 +1,51 @@
 import { Box, Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useAuth } from "../context/Auth/AuthContext";
-import { BASE_URL } from "../constants/BaseUrl";
 import { useCart } from "../context/Cart/CartContext";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 
 const CartPage = () => {
-    const { token } = useAuth();
-    const [error, setError] = useState('');
-    const { cartItems, totalAmount } = useCart();
+  const { cartItems, totalAmount } = useCart();
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h6">My Cart</Typography>
-      {cartItems.map((item) => (
-        <Box>{item.title}</Box>
-      ))}
-      {error && <Typography sx={{color: "red"}}>{error}</Typography>}
+    <Container fixed sx={{ mt: 4 }}>
+      <Typography variant="h4" marginBottom={5}>My Cart</Typography>
+      <Box display="flex" flexDirection="column" gap={4}>
+        {cartItems.map((item) => (
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{
+              border: 1,
+              borderColor: "#cccccc",
+              borderRadius: 3,
+              padding: 2
+            }}
+          >
+            <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
+              <img src={item.image} width={100} height={100} />
+              <Box>
+                <Typography variant="h5">{item.title}</Typography>
+                <Typography>
+                  {item.quantity} x {item.unitPrice} SAR
+                </Typography>
+                <Button>Remove Item</Button>
+              </Box>
+            </Box>
+
+            <ButtonGroup variant="contained" aria-label="Basic button group">
+              <Button>-</Button>
+              <Button>+</Button>
+            </ButtonGroup>
+          </Box>
+        ))}
+        <Box>
+          <Typography variant="h5">Total Amount: {totalAmount.toFixed(2)} SAR</Typography>
+        </Box>
+      </Box>
     </Container>
   );
 };
 
 export default CartPage;
-

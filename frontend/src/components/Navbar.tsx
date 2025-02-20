@@ -10,8 +10,9 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import ShoppingBag from "@mui/icons-material/ShoppingBag";
 import { useAuth } from "../context/Auth/AuthContext";
-import { Button, Grid } from "@mui/material";
+import { Badge, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {
@@ -20,7 +21,7 @@ function Navbar() {
     null
   );
 
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -32,13 +33,17 @@ function Navbar() {
 
   const handeLogin = () => {
     navigate("/login");
-  }
+  };
+
+  const handeCart = () => {
+    navigate("/cart");
+  };
 
   const handleLogout = () => {
     logout();
     navigate("/");
-    handleCloseUserMenu()
-  }
+    handleCloseUserMenu();
+  };
 
   return (
     <AppBar position="static">
@@ -76,7 +81,18 @@ function Navbar() {
               </Typography>
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              gap={4}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <IconButton aria-label="cart" onClick={handeCart}>
+                <Badge badgeContent={4} color="secondary">
+                  <ShoppingBag sx={{color: "#ffffff"}} />
+                </Badge>
+              </IconButton>
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
@@ -128,7 +144,11 @@ function Navbar() {
                   </Menu>
                 </>
               ) : (
-                <Button onClick={handeLogin} variant={"contained"} color={"warning"}>
+                <Button
+                  onClick={handeLogin}
+                  variant={"contained"}
+                  color={"warning"}
+                >
                   Login
                 </Button>
               )}

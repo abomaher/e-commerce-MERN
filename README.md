@@ -6,6 +6,8 @@ You know we work in this project by `JavaScript` now calling modern web developm
 
 We work in this project by `Visual Studio Code` for write code and `MongoDB Compass` for management database.
 
+For best practices to work with Visual Studio Code must be installed this extensions `Prettier` and `ESLint` for active decument format option.
+
 ## BackEnd and Database configuration
 
 #### We useing in backend `Express.js` framework with `Node.js` runtime, You can start work with it by this steps: 
@@ -36,7 +38,7 @@ We work in this project by `Visual Studio Code` for write code and `MongoDB Comp
     npx tsc --init
     ```
 
-6. Open `tsconfig.json` after `compilerOptions` section add this two sections:
+6. Open `tsconfig.json` after `compilerOptions` option add this two options:
 
     ```js
     "include": ["src/**/*"], // all files to convert it form .ts to .js

@@ -80,7 +80,7 @@ const CartPage = () => {
         ))}
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Typography variant="h4">
-            Total Amount: {totalAmount.toFixed(2)} EGP
+            Total Amount: {totalAmount.toFixed(2)} SAR
           </Typography>
           <Button variant="contained" onClick={handleCheckout}>
             Go To Checkout

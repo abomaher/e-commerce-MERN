@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useCart } from "../context/Cart/CartContext";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   _id: string;
@@ -15,6 +16,13 @@ interface Props {
 
 export default function ProductCard({ _id, title, image, price }: Props) {
   const { addItemToCart } = useCart();
+  const navigate = useNavigate();
+
+
+  const productPage = () => {
+    navigate(`/product/${_id}`);
+  }
+
   return (
     <Card>
       <CardMedia
@@ -23,9 +31,11 @@ export default function ProductCard({ _id, title, image, price }: Props) {
         title={title}
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {title}
-        </Typography>
+        <Button variant="text" sx={{padding: 0, background: "#ffffff"}} onClick={productPage}>
+          <Typography gutterBottom variant="h5" component="div">
+            {title}
+          </Typography>
+        </Button>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {price} SAR
         </Typography>

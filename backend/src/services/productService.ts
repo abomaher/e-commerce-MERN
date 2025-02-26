@@ -4,6 +4,14 @@ export const getAllProducts = async () => {
   return await productModel.find();
 };
 
+interface getProduct{
+  productId: string;
+}
+
+export const getProduct = async ({ productId }: getProduct) => {
+  return await productModel.findById(productId);
+};
+
 export const seedInitialProducts = async () => {
   try {
     const products = [

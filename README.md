@@ -10,13 +10,14 @@ We work in this project by `Visual Studio Code` for write code and `MongoDB Comp
 
 We useing in backend `Express.js` framework with `Node.js` runtime, You can start work with it by this steps: 
 
-1. Create empty folder with name `e-commerce`.#^
+1. Create empty folder with name `e-commerce`.
+
 
 2. Install `package.json` by call this command:
 
-```
-npm init -y
-```
+    ```
+    npm init -y
+    ```
 
 - Install express, mongoose and typescript by call this command:
 

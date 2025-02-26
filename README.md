@@ -10,40 +10,39 @@ We work in this project by `Visual Studio Code` for write code and `MongoDB Comp
 
 We useing in backend `Express.js` framework with `Node.js` runtime, You can start work with it by this steps: 
 
-1. Create empty folder with name `e-commerce`.
+1. Create empty folder with name `e-commerce` and open it by Visual Studio Code.
 
-
-2. Install `package.json` by call this command:
+2. Open new terminal and install `package.json` by call this command:
 
     ```
     npm init -y
     ```
 
-- Install express, mongoose and typescript by call this command:
+3. Install express, mongoose and typescript by call this command:
 
-```
-npm i express mongoose typescript
-```
+    ```
+    npm i express mongoose typescript
+    ```
 
-- Install nodemon, ts-node `useing only for dependencies` (to help us start .ts file by .js file) by call this command:
+4. Install nodemon, ts-node `useing only for dependencies` (to help us start .ts file by .js file) by call this command:
 
-```
-npm i --save-dev nodemon ts-node
-```
+    ```
+    npm i --save-dev nodemon ts-node
+    ```
 
-- Install `tsconfig.json` by call this command:
+5. Install `tsconfig.json` by call this command:
 
-```
-npx tsc --init
-```
+    ```
+    npx tsc --init
+    ```
 
-- Open `tsconfig.json` after `compilerOptions` section add this two sections:
+6. Open `tsconfig.json` after `compilerOptions` section add this two sections:
 
-```js
-"include": ["src/**/*"], // all files to convert it form .ts to .js
-"exclude": ["node_modules"] // this folder not convet any files inside it.
-```
+    ```js
+    "include": ["src/**/*"], // all files to convert it form .ts to .js
+    "exclude": ["node_modules"] // this folder not convet any files inside it.
+    ```
 
-- Connect and create database with name `ecommerce` by MongoDB Compass.
+7. Connect and create database with name `ecommerce` by MongoDB Compass.
 
-#### Not forget to install typescript for any package the Visual Studio Code can help you for that.
+##### Not forget to install typescript for any package the Visual Studio Code can help you for that.
